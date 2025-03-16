@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+
 }
 
 group = 'org.example'
@@ -48,7 +49,26 @@ dependencies {
     implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // para la ruta /openapi con JSON schema
     implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // para Swagger UI
     implementation("io.javalin.community.openapi:javalin-redoc-plugin:$openapi") // para ReDoc UI
+    implementation 'org.jasypt:jasypt:1.9.3'
+
+
+    shadowJar{
+        archiveBaseName.set("app")
+        archiveClassifier.set('')
+        archiveVersion.set('')
+    }
+/**
+ * tarea necesaria para heroku si optamos por la tarea de Shadowjar
+ * en el archivo Procfile debe estar el siguiente comando:
+ * web: java -jar build/libs/app.jar
+ */
+    task stage {
+        dependsOn shadowJar
+    }
+
 }
+
+
 
 test {
     useJUnitPlatform()
