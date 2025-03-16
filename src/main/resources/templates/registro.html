@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1a1a1a; /* Fondo oscuro */
+            color: #ffffff; /* Texto blanco */
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background-color: #2d2d2d; /* Fondo del contenedor */
+            padding: 2rem;
+            border-radius: 15px; /* Esquinas redondeadas */
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* Sombra */
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-control {
+            background-color: #3d3d3d; /* Fondo de los inputs */
+            color: #ffffff; /* Texto blanco en los inputs */
+            border: 1px solid #555555; /* Borde de los inputs */
+        }
+        .form-control:focus {
+            background-color: #4d4d4d; /* Fondo de los inputs al enfocar */
+            border-color: #777777; /* Borde de los inputs al enfocar */
+            color: #ffffff;
+        }
+        .btn-primary {
+            border: 0;
+            background-color: #a30c40;
+        }
+        .btn-primary:hover {
+            background: rgb(82,5,85,1);
+        }
+        a {
+            color: #007bff; /* Color de los enlaces */
+            text-decoration: none;
+        }
+        a:hover {
+            color: #0056b3; /* Color de los enlaces al pasar el ratón */
+            text-decoration: underline;
+        }
+        /* Estilos de gradiente para el botón */
+        .btn-primary:hover {
+            background: linear-gradient(43deg, var(--myColor1) 0%, var(--myColor2) 76%, var(--myColor3) 100%);
+            transition: --myColor1 0.4s, --myColor2 0.5s, --myColor3 0.2s;
+            --myColor1: #fd1d1d;
+            --myColor2: #b43aa0;
+            --myColor3: #833ab4;
+        }
+        .btn-primary:not(:hover) {
+            background: linear-gradient(90deg, var(--myColor1), var(--myColor2));
+            transition: --myColor1 0.4s, --myColor2 0.5s, --myColor3 0.2s;
+        }
+        @property --myColor1 {
+            syntax: '<color>';
+            initial-value: #833ab4;
+            inherits: false;
+        }
+        @property --myColor2 {
+            syntax: '<color>';
+            initial-value: #FD1D1DFF;
+            inherits: false;
+        }
+        @property --myColor3 {
+            syntax: '<color>';
+            initial-value: #ae1e1e;
+            inherits: false;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h3 class="text-center">Registro</h3>
+    <form action="/Registro" method="post" class="mt-4">
+        <div class="mb-3">
+            <label for="username" class="form-label">Nombre de Usuario:</label>
+            <input type="text" id="username" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre Completo:</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+    </form>
+    <div class="text-center mt-3">
+        <p class="mb-0">
+            ¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí</a>.
+        </p>
+    </div>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

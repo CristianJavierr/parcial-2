@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Encuesta</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #ffffff;
+    }
+    .form-container {
+      background-color: #2d2d2d;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .navbar.bg-dark {
+      background: rgb(131,58,180) !important;
+      background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%) !important;
+      padding-left: 80px;
+      padding-right: 80px;
+    }
+  </style>
+</head>
+<body>
+<!-- Navbar Responsive -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <!-- Logo o nombre de la aplicación -->
+    <a class="navbar-brand" href="/">Encuestas</a>
+
+    <!-- Botón de hamburguesa para móviles -->
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú colapsable -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <!-- Opción para llenar encuesta -->
+        <li class="nav-item">
+          <a class="nav-link" href="/encuestas/crear">Llenar Encuesta</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/Encuesta/Pendientes">Encuestas Pendientes</a>
+        </li>
+        <!-- Opción para listado de usuarios (solo para administradores) -->
+        <li th:if="${session.usuario != null && session.usuario.checkRol('ADMIN')}" class="nav-item">
+          <a class="nav-link" href="/usuarios">Listado de Usuarios</a>
+        </li>
+      </ul>
+      <!-- Opciones de la derecha (LogOut) -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">LogOut</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h3 class="text-center">Editar Encuesta</h3>
+  <div class="form-container">
+    <form id="editarEncuestaForm">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+      </div>
+      <div class="mb-3">
+        <label for="sector" class="form-label">Sector</label>
+        <input type="text" class="form-control" id="sector" name="sector" required>
+      </div>
+      <div class="mb-3">
+        <label for="nivelEscolar" class="form-label">Nivel Escolar</label>
+        <select class="form-select" id="nivelEscolar" name="nivelEscolar" required>
+          <option value="Básico">Básico</option>
+          <option value="Medio">Medio</option>
+          <option value="Grado Universitario">Grado Universitario</option>
+          <option value="Postgrado">Postgrado</option>
+          <option value="Doctorado">Doctorado</option>
+        </select>
+      </div>
+      <!-- Campos ocultos para latitud y longitud -->
+      <input type="hidden" id="latitud" name="latitud">
+      <input type="hidden" id="longitud" name="longitud">
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+  </div>
+</div>
+
+<!-- Scripts de Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Obtener el índice de la encuesta a editar desde la URL
+  const path = window.location.pathname; // Obtener la ruta completa
+  const index = path.split('/').pop(); // Extraer el último segmento de la ruta (el índice)
+
+  console.log('Índice recuperado:', index); // Depuración: Verificar el índice
+
+  // Cargar los datos de la encuesta seleccionada
+  localforage.getItem('surveyData').then(students => {
+    if (students && students[index]) {
+      const student = students[index];
+      document.getElementById('nombre').value = student.nombre;
+      document.getElementById('sector').value = student.sector;
+      document.getElementById('nivelEscolar').value = student.nivelEscolar;
+      document.getElementById('latitud').value = student.latitud || '';
+      document.getElementById('longitud').value = student.longitud || '';
+    } else {
+      alert('No se encontró la encuesta seleccionada.');
+    }
+  }).catch(error => {
+    alert('Error al cargar los datos: ' + error.message);
+  });
+
+  // Manejar el envío del formulario
+  document.getElementById('editarEncuestaForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const updatedStudent = {
+      nombre: document.getElementById('nombre').value,
+      sector: document.getElementById('sector').value,
+      nivelEscolar: document.getElementById('nivelEscolar').value,
+      latitud: document.getElementById('latitud').value,
+      longitud: document.getElementById('longitud').value
+    };
+
+    localforage.getItem('surveyData').then(students => {
+      if (students && students[index]) {
+        students[index] = updatedStudent;
+        return localforage.setItem('surveyData', students);
+      } else {
+        throw new Error('No se encontró la encuesta seleccionada.');
+      }
+    }).then(() => {
+      alert('Encuesta actualizada correctamente.');
+      window.location.href = '/Encuesta/Pendientes';
+    }).catch(error => {
+      alert('Error al actualizar la encuesta: ' + error.message);
+    });
+  });
+</script>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log("Service Worker registrado correctamente."))
+            .catch(err => console.error("Error registrando el Service Worker:", err));
+  }
+</script>
+
+
+
+</body>
+</html>

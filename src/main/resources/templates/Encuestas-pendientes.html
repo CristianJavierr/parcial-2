@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registros Pendientes</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #1a1a1a; /* Fondo oscuro */
+            color: #ffffff; /* Texto blanco */
+            min-height: 100vh;
+        }
+
+        .data-container {
+            background-color: #2d2d2d; /* Fondo del contenedor */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .encuesta-container {
+            background-color: #3d3d3d; /* Fondo de cada registro */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .btn-custom {
+            background-color: #007bff; /* Color del botón */
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3; /* Color del botón al pasar el ratón */
+        }
+
+        .btn-success {
+            background-color: #28a745; /* Color del botón de enviar */
+        }
+
+        .btn-warning {
+            background-color: #ffc107; /* Color del botón de editar */
+        }
+
+        .btn-danger {
+            background-color: #dc3545; /* Color del botón de eliminar */
+        }
+
+        .navbar.bg-dark {
+            background: rgb(131,58,180) !important;
+            background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%) !important;
+            padding-left: 80px;
+            padding-right: 80px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar Responsive -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- Logo o nombre de la aplicación -->
+        <a class="navbar-brand" href="/">Encuestas</a>
+
+        <!-- Botón de hamburguesa para móviles -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menú colapsable -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Opción para llenar encuesta -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/encuestas/crear">Llenar Encuesta</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Encuesta/Pendientes">Encuestas Pendientes</a>
+                </li>
+                <!-- Opción para listado de usuarios (solo para administradores) -->
+                <li th:if="${session.usuario != null && session.usuario.checkRol('ADMIN')}" class="nav-item">
+                    <a class="nav-link" href="/usuarios">Listado de Usuarios</a>
+                </li>
+            </ul>
+            <!-- Opciones de la derecha (LogOut) -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">LogOut</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="container mt-5">
+    <h1 class="text-center">Encuesta Pendientes</h1>
+    <div class="data-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="fas fa-users-class"></i> Encuesta Pendientes</h2>
+                <p class="lead text-muted">Registros locales no sincronizados</p>
+            </div>
+            <button class="btn btn-success ms-2" onclick="sendAllPendingStudents()">
+                <i class="fas fa-cloud-upload-alt"></i> Enviar Todos
+            </button>
+        </div>
+
+        <!-- Contenedor para los registros encapsulados -->
+        <div id="pendingStudentsList"></div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/encuestas-pendientes.js"></script>
+
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log("Service Worker registrado correctamente."))
+            .catch(err => console.error("Error registrando el Service Worker:", err));
+    }
+</script>
+
+</body>
+</html>
